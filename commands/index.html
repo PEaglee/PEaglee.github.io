@@ -100,7 +100,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:space-betw
       <li><b>Follow:</b> o teu avatar fica com o dobro do tamanho durante 1 minuto.</li>
       <li><b>Sub / membro:</b> avatar gigante e toda a gente dança. Os subs oferecidos e os presentes do TikTok também põem todos a dançar.</li>
       <li><b>Bits / Super Chat:</b> o teu avatar explode e toda a gente dança.</li>
-      <li><b>Raid:</b> dança geral e shoutout. Raids com 5 ou mais pessoas trazem um BOSS: entra com !join guerreiro, !join mago ou !join padre (também há bardo, druida, necromante e guarda-florestal).</li>
+      <li><b>Raid:</b> dança geral e shoutout. Raids com 5 ou mais pessoas trazem um BOSS: entra com !juntar guerreiro, !juntar mago ou !juntar padre (também há bardo, druida, necromante e guarda-florestal).</li>
     </ul>
   </div>
 </section>
@@ -151,28 +151,35 @@ const GROUPS=[
   {n:"!game nome do jogo",d:"Muda a categoria da live na Twitch e no Kick.",p:ALL,mod:1}
  ]},
  {t:"Avatares",s:"O teu boneco no ecrã (Stream Avatars). Cada plataforma tem a sua equipa: Twitch = Dragon Ball, Kick = Digimon, YouTube = Metal Slug, TikTok = Pokémon.",c:[
-  {n:"!avatars nome",d:"Mudas de avatar. Só ficam os da tua plataforma: se escolheres outro, recebes um aleatório da tua equipa.",p:SA},
-  {n:"!color",d:"Lista as cores disponíveis. Usa !color nome para mudar.",p:SA},
-  {n:"!gear",d:"Lista acessórios (chapéus, máscaras…) para equipar.",p:SA},
-  {n:"!random",d:"Equipa uma combinação aleatória, sempre dentro da tua plataforma.",p:SA},
-  {n:"!show",d:"Mostra o que tens equipado.",p:SA},
-  {n:"!jump",d:"O teu avatar salta.",p:SA},
-  {n:"!dance",d:"O teu avatar dança.",p:SA},
-  {n:"!sit",d:"O teu avatar senta-se. Usa !stand para levantar.",p:SA},
-  {n:"!attack @nome",d:"Atacas o avatar de outra pessoa.",p:SA},
-  {n:"!hug @nome",d:"Dás um abraço ao avatar de outra pessoa.",p:SA},
-  {n:"!sling ângulo força",d:"Atiras o teu avatar pelo ecrã, por exemplo !sling 60 80.",p:SA},
-  {n:"!left / !right",d:"Mexes o avatar para a esquerda ou para a direita, por exemplo !left 20.",p:SA}
+  {n:"!avatares nome",d:"Mudas de avatar. Só ficam os da tua plataforma: se escolheres outro, recebes um aleatório da tua equipa. Sem nome, mostra a lista.",p:SA},
+  {n:"!cor",d:"Lista as cores disponíveis. Usa !cor nome para mudar.",p:SA},
+  {n:"!equipamento",d:"Acessórios (chapéus, bonés, pokébolas…) para equipar.",p:SA},
+  {n:"!crachás",d:"Muda o estilo do teu nome por cima do avatar.",p:SA},
+  {n:"!aleatória",d:"Equipa uma combinação aleatória, sempre dentro da tua plataforma.",p:SA},
+  {n:"!mostrar",d:"Mostra o que tens equipado.",p:SA},
+  {n:"!pula",d:"O teu avatar salta.",p:SA},
+  {n:"!dança",d:"O teu avatar dança.",p:SA},
+  {n:"!senta",d:"O teu avatar senta-se. Usa !levanta para levantar.",p:SA},
+  {n:"!abraça @nome",d:"Dás um abraço ao avatar de outra pessoa.",p:SA},
+  {n:"!ataca @nome",d:"Atacas o avatar de outra pessoa.",p:SA},
+  {n:"!peidar",d:"Já sabes o que faz… 💨",p:SA},
+  {n:"!funda ângulo força",d:"Atiras o teu avatar pelo ecrã, por exemplo !funda 60 80.",p:SA},
+  {n:"!mover",d:"Mexes o avatar para um dos lados do ecrã.",p:SA},
+  {n:"!escalar",d:"O teu avatar trepa pelo ecrã.",p:SA},
+  {n:"!fogodeartifício",d:"Lança fogo de artifício.",p:SA}
  ]},
  {t:"Moedas e minijogos",s:"Ganhas moedas a ver a live e gastas aqui (Stream Avatars).",c:[
-  {n:"!currency",d:"Quantas moedas tens.",p:SA},
-  {n:"!shop",d:"Loja de avatares, cores e acessórios. Compra com !buy.",p:SA},
-  {n:"!duel @nome valor",d:"Desafias alguém para um duelo a valer moedas.",p:SA},
+  {n:"!moeda",d:"Quantas moedas tens.",p:SA},
+  {n:"!comprar",d:"Loja de avatares, cores e acessórios.",p:SA},
+  {n:"!presente @nome",d:"Ofereces moedas ou itens a outra pessoa.",p:SA},
+  {n:"!duelo @nome valor",d:"Desafias alguém para um duelo a valer moedas.",p:SA},
+  {n:"!aposta",d:"Roleta: apostas moedas numa cor ou número.",p:SA},
   {n:"!slots valor",d:"Jogas nas slots com as tuas moedas.",p:SA},
-  {n:"!bet",d:"Mostra as apostas abertas. Por exemplo !bet 10 red.",p:SA},
-  {n:"!join",d:"Entras numa equipa ou na luta contra o boss.",p:SA},
-  {n:"!leaderboard",d:"Top 10 do canal.",p:SA},
-  {n:"!roll",d:"Rola um número de 0 a 100, ou um dado com !roll 1d6.",p:SA}
+  {n:"!pachinko",d:"Jogo do pachinko.",p:SA},
+  {n:"!garra",d:"Máquina das garras.",p:SA},
+  {n:"!juntar classe",d:"Entras na luta contra o boss: guerreiro, mago, padre, bardo, druida, necromante ou guarda-florestal.",p:SA},
+  {n:"!rolar",d:"Rola um número de 0 a 100, ou um dado com !rolar 1d6.",p:SA},
+  {n:"!entreosmelhores",d:"Top 10 do canal.",p:SA}
  ]}
 ];
 const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
