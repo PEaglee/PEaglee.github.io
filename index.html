@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comandos do PEagle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: o chat do ninho da águia — direto, tuga, com ar de jogo
+   IDEA: a página de "binds" de um jogo — cada comando é uma tecla que fazes no chat
+   PICTURE: a águia em laranja sobre o preto, e a própria lista filtrável por plataforma
+   COLOUR and TYPE: preto quente, laranja #ff6a13, vermelho #e0261b; Black Ops One + Inter
+   LAYOUT: cabeçalho com águia, barra de plataformas fixa, grupos de comandos em grelha */
+:root{color-scheme:dark;--bg:#0d0a09;--panel:#17110f;--line:#2c201b;--ink:#f4ece6;--mute:#b3a49a;--or:#ff6a13;--red:#e0261b;
+--tw:#9b6bff;--yt:#ff3b3b;--kk:#53fc18;--tt:#25f4ee;--sa:#ffb547}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,sans-serif;overflow-x:clip}
+a{color:var(--or)}
+.band{padding:clamp(24px,4vw,56px) max(5vw,16px)}
+.wrap{max-width:1240px;margin:0 auto}
+header.band{background:radial-gradient(120% 140% at 85% 0%,#3a1408 0%,#1a0d08 45%,var(--bg) 80%);border-bottom:1px solid var(--line);padding-bottom:28px}
+.hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:center}
+h1{font:400 clamp(34px,6vw,58px)/1.02 "Black Ops One",Impact,sans-serif;margin:0;letter-spacing:.5px;text-wrap:balance}
+h1 span{color:var(--or)}
+.lead{color:var(--mute);margin:12px 0 0;max-width:60ch}
+.eagle{display:block;width:clamp(140px,22vw,230px);height:auto;aspect-ratio:1;border-radius:24px;border:2px solid #4a1d0c;box-shadow:0 14px 40px rgba(224,38,27,.35)}
+.bar{position:sticky;top:0;z-index:5;background:rgba(13,10,9,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:12px max(5vw,16px)}
+.tabs{display:flex;flex-wrap:wrap;gap:8px}
+.tab{min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font:600 15px Inter,sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.tab i{width:10px;height:10px;border-radius:50%;background:var(--c,var(--or))}
+.tab[aria-pressed=true]{background:var(--or);border-color:var(--or);color:#140904}
+.tab[aria-pressed=true] i{background:#140904}
+.tab:focus-visible,.cmd:focus-visible,input:focus-visible{outline:2px solid var(--or);outline-offset:2px}
+input[type=search]{flex:1 1 220px;min-height:44px;border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font:16px Inter,sans-serif;padding:0 14px}
+main .wrap{display:grid;gap:clamp(28px,4vw,44px)}
+section h2{font:400 clamp(22px,3vw,28px)/1.1 "Black Ops One",Impact,sans-serif;margin:0 0 4px;color:var(--ink)}
+section .sub{color:var(--mute);margin:0 0 14px;font-size:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:12px}
+.cmd{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;cursor:pointer;text-align:left;color:inherit;font:inherit;width:100%;transition:border-color .15s,transform .15s}
+.cmd:hover{border-color:#5a3626;transform:translateY(-1px)}
+.top{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.name{font:700 17px/1.2 Inter,sans-serif;color:var(--or);white-space:nowrap}
+.alias{font-size:13px;color:var(--mute)}
+.desc{margin:6px 0 10px;font-size:15px}
+.note{display:block;font-size:13px;color:var(--mute);margin:-4px 0 10px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:600 12px/1 Inter,sans-serif;padding:5px 8px;border-radius:6px;border:1px solid color-mix(in srgb,var(--c) 55%,transparent);color:var(--c);background:color-mix(in srgb,var(--c) 10%,transparent)}
+.chip.mod{--c:var(--red)}
+.copied{position:absolute;top:12px;right:14px;font-size:12px;color:var(--or);opacity:0;transition:opacity .2s}
+.cmd.ok .copied{opacity:1}
+main .empty{color:var(--mute);display:none}
+.auto{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:12px}
+.auto li{background:linear-gradient(180deg,#1d120d,var(--panel));border:1px solid var(--line);border-left:3px solid var(--red);border-radius:14px;padding:12px 16px;font-size:15px}
+.auto b{color:var(--ink)}
+footer{color:var(--mute);font-size:14px;border-top:1px solid var(--line)}
+footer .wrap{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:space-between}
+@media(max-width:600px){.hero{grid-template-columns:1fr}.eagle{order:-1;width:120px;border-radius:18px}.bar .wrap{gap:8px}.tab{padding:0 12px;font-size:14px}}
+@media(prefers-reduced-motion:reduce){.cmd{transition:none}.cmd:hover{transform:none}}
+</style>
+</head>
+<body>
+<header class="band">
+  <div class="wrap hero">
+    <div>
+      <h1>Comandos do <span>PEagle</span></h1>
+      <p class="lead">Tudo o que podes escrever no chat do ninho, em todas as plataformas. Escolhe a tua plataforma em baixo. Carrega num comando para o copiar.</p>
+    </div>
+    <img class="eagle" src="avatar.jpg" width="480" height="480" alt="Avatar do PEagle">
+  </div>
+</header>
+
+<div class="bar">
+  <div class="wrap">
+    <div class="tabs" role="group" aria-label="Plataforma">
+      <button class="tab" data-p="all" aria-pressed="true"><i></i>Todas</button>
+      <button class="tab" data-p="tw" style="--c:var(--tw)" aria-pressed="false"><i></i>Twitch</button>
+      <button class="tab" data-p="yt" style="--c:var(--yt)" aria-pressed="false"><i></i>YouTube</button>
+      <button class="tab" data-p="kk" style="--c:var(--kk)" aria-pressed="false"><i></i>Kick</button>
+      <button class="tab" data-p="tt" style="--c:var(--tt)" aria-pressed="false"><i></i>TikTok</button>
+    </div>
+    <input id="q" type="search" placeholder="Procurar comando…" aria-label="Procurar comando">
+  </div>
+</div>
+
+<main class="band">
+  <div class="wrap" id="list"></div>
+  <p class="wrap empty" id="empty">Nenhum comando encontrado.</p>
+</main>
+
+<section class="band" style="padding-top:0">
+  <div class="wrap">
+    <h2>Acontece sozinho</h2>
+    <p class="sub">Não precisas de escrever nada: o bot e os avatares reagem por ti.</p>
+    <ul class="auto">
+      <li><b>Saudação:</b> diz olá, boas, broas, oi, salve… e o bot dá-te as boas-vindas ao ninho.</li>
+      <li><b>Primeiro do dia:</b> o primeiro a escrever na live ganha destaque no chat e o avatar fica gigante durante 1 minuto.</li>
+      <li><b>Sequência de lives:</b> aparece em lives seguidos e és anunciado aos 3, 5, 7, 10, 15… Vê a tua com !sequencia.</li>
+      <li><b>Follow:</b> o teu avatar fica com o dobro do tamanho durante 1 minuto.</li>
+      <li><b>Sub / membro:</b> avatar gigante e toda a gente dança. Os subs oferecidos e os presentes do TikTok também põem todos a dançar.</li>
+      <li><b>Bits / Super Chat:</b> o teu avatar explode e toda a gente dança.</li>
+      <li><b>Raid:</b> dança geral e shoutout. Raids com 5 ou mais pessoas trazem um BOSS: entra com !juntar guerreiro, !juntar mago ou !juntar padre (também há bardo, druida, necromante e guarda-florestal).</li>
+    </ul>
+  </div>
+</section>
+
+<footer class="band">
+  <div class="wrap">
+    <span>Twitch: twitch.tv/peagle · YouTube: @PEagle4 · Kick: kick.com/peagle4 · TikTok: @peagle__</span>
+    <span>Atualizado a 21/11/2026</span>
+  </div>
+</footer>
+
+<script>
+{
+const ALL=["tw","yt","kk","tt"], NOTW=["yt","kk","tt"], SA=["tw","yt","kk","tt"];
+const NAMES={tw:"Twitch",yt:"YouTube",kk:"Kick",tt:"TikTok",sa:"Stream Avatars"};
+const GROUPS=[
+ {t:"Redes e links",s:"Onde encontrar o PEagle e a malta. No TikTok o bot responde sem links, porque o TikTok bloqueia-os.",c:[
+  {n:"!socials",d:"Todas as redes do PEagle: Instagram, X, TikTok, YouTube e Kick.",p:ALL},
+  {n:"!discord",d:"Convite para o Discord do canal.",p:ALL},
+  {n:"!plataformas",d:"Diz em que outras plataformas o PEagle também está em direto.",p:NOTW,note:"Não existe na Twitch, por causa das regras de simulcast."},
+  {n:"!instantgaming",d:"Link para comprar jogos e cartões mais baratos na Instant Gaming e apoiar o canal.",p:ALL,note:"No TikTok aparece o código PEagle em vez do link."},
+  {n:"!cases",d:"Caixas grátis diárias.",p:ALL},
+  {n:"!tts",d:"Guia para mandares mensagens com voz (Text To Speech).",p:ALL},
+  {n:"!gtm_discord",d:"Discord dos GTM (Gentlemans).",p:ALL},
+  {n:"!dokkan",d:"Discord tuga de Dragon Ball Dokkan Battle.",p:ALL}
+ ]},
+ {t:"Sobre o canal",s:"Para ficares a saber mais sobre o ninho.",c:[
+  {n:"!gentlemans",d:"O que é a Gentlemans, a org de streamers e equipas de eSports do PEagle.",p:ALL},
+  {n:"!provadevinhos",d:"A Prova de Vinhos é o segmento em que o PEagle experimenta jogos que raramente se jogam.",p:ALL}
+ ]},
+ {t:"Live e jogo",s:"Informação sobre o direto.",c:[
+  {n:"!jogo",a:["!game"],d:"O jogo que está a ser jogado e o preço na Instant Gaming.",p:ALL},
+  {n:"!uptime",d:"Há quanto tempo o PEagle está em direto.",p:ALL},
+  {n:"!followage",d:"Há quanto tempo segues o canal.",p:["tw"],note:"Só a Twitch dá esta informação."},
+  {n:"!clip",d:"Guarda o que acabou de acontecer: clip na Twitch com os últimos 30 segundos, clip vertical com o último minuto e marcador no VOD.",p:ALL,note:"Só com o PEagle em direto. Depois de um clip, o próximo só dá passados 90 segundos."},
+  {n:"!sequencia",a:["!streak"],d:"A tua sequência de lives seguidos, o teu recorde e o total de lives em que estiveste.",p:ALL},
+  {n:"!comandos",a:["!commands"],d:"Mostra o link para esta página.",p:ALL}
+ ]},
+ {t:"Diversão",s:"Para animar o chat.",c:[
+  {n:"!lurk",d:"Avisa que vais ficar a ver em silêncio (e quantos canecos vais beber).",p:ALL},
+  {n:"!love @nome",d:"Calcula a compatibilidade entre ti e outra pessoa.",p:ALL},
+  {n:"!8ball pergunta",d:"A bola mágica responde à tua pergunta de sim ou não.",p:ALL},
+  {n:"!roulette",d:"Roleta russa: 1 hipótese em 6 de levares timeout de 60 segundos.",p:ALL,note:"No TikTok não há timeout, só a mensagem."},
+  {n:"!seppuku",d:"Restauras a tua honra… com um timeout de 60 segundos.",p:ALL,note:"No TikTok não há timeout, só a mensagem."}
+ ]},
+ {t:"Moderadores",s:"Só funcionam para mods e para o PEagle.",c:[
+  {n:"!so @nome",a:["!shoutout"],d:"Dá shoutout a outro streamer. Na Twitch faz também o shoutout oficial.",p:ALL,mod:1},
+  {n:"!game nome do jogo",d:"Muda a categoria da live na Twitch e no Kick.",p:ALL,mod:1}
+ ]},
+ {t:"Avatares",s:"O teu boneco no ecrã (Stream Avatars). Cada plataforma tem a sua equipa: Twitch = Dragon Ball, Kick = Digimon, YouTube = Metal Slug, TikTok = Pokémon.",c:[
+  {n:"!avatares nome",d:"Mudas de avatar. Só ficam os da tua plataforma: se escolheres outro, recebes um aleatório da tua equipa. Sem nome, mostra a lista.",p:SA},
+  {n:"!cor",d:"Lista as cores disponíveis. Usa !cor nome para mudar.",p:SA},
+  {n:"!equipamento",d:"Acessórios (chapéus, bonés, pokébolas…) para equipar.",p:SA},
+  {n:"!crachás",d:"Muda o estilo do teu nome por cima do avatar.",p:SA},
+  {n:"!aleatória",d:"Equipa uma combinação aleatória, sempre dentro da tua plataforma.",p:SA},
+  {n:"!mostrar",d:"Mostra o que tens equipado.",p:SA},
+  {n:"!pula",d:"O teu avatar salta.",p:SA},
+  {n:"!dança",d:"O teu avatar dança.",p:SA},
+  {n:"!senta",d:"O teu avatar senta-se. Usa !levanta para levantar.",p:SA},
+  {n:"!abraça @nome",d:"Dás um abraço ao avatar de outra pessoa.",p:SA},
+  {n:"!ataca @nome",d:"Atacas o avatar de outra pessoa.",p:SA},
+  {n:"!peidar",d:"Já sabes o que faz… 💨",p:SA},
+  {n:"!funda ângulo força",d:"Atiras o teu avatar pelo ecrã, por exemplo !funda 60 80.",p:SA},
+  {n:"!mover",d:"Mexes o avatar para um dos lados do ecrã.",p:SA},
+  {n:"!escalar",d:"O teu avatar trepa pelo ecrã.",p:SA},
+  {n:"!fogodeartifício",d:"Lança fogo de artifício.",p:SA}
+ ]},
+ {t:"Moedas e minijogos",s:"Ganhas moedas a ver a live e gastas aqui (Stream Avatars).",c:[
+  {n:"!moeda",d:"Quantas moedas tens.",p:SA},
+  {n:"!comprar",d:"Loja de avatares, cores e acessórios.",p:SA},
+  {n:"!presente @nome",d:"Ofereces moedas ou itens a outra pessoa.",p:SA},
+  {n:"!duelo @nome valor",d:"Desafias alguém para um duelo a valer moedas.",p:SA},
+  {n:"!aposta",d:"Roleta: apostas moedas numa cor ou número.",p:SA},
+  {n:"!slots valor",d:"Jogas nas slots com as tuas moedas.",p:SA},
+  {n:"!pachinko",d:"Jogo do pachinko.",p:SA},
+  {n:"!garra",d:"Máquina das garras.",p:SA},
+  {n:"!juntar classe",d:"Entras na luta contra o boss: guerreiro, mago, padre, bardo, druida, necromante ou guarda-florestal.",p:SA},
+  {n:"!rolar",d:"Rola um número de 0 a 100, ou um dado com !rolar 1d6.",p:SA},
+  {n:"!entreosmelhores",d:"Top 10 do canal.",p:SA}
+ ]}
+];
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const list=document.getElementById("list"),q=document.getElementById("q"),empty=document.getElementById("empty");
+let plat="all";
+function render(){
+ const term=q.value.trim().toLowerCase();let total=0;
+ list.innerHTML=GROUPS.map(g=>{
+  const items=g.c.filter(c=>(plat==="all"||c.p.includes(plat))&&(!term||(c.n+" "+(c.a||[]).join(" ")+" "+c.d).toLowerCase().includes(term)));
+  total+=items.length;
+  if(!items.length)return"";
+  return `<section><h2>${esc(g.t)}</h2><p class="sub">${esc(g.s)}</p><div class="grid">${items.map(c=>`
+   <button class="cmd" data-copy="${esc(c.n.split(" ")[0])}"><span class="copied">Copiado</span>
+    <span class="top"><span class="name">${esc(c.n)}</span>${c.a?`<span class="alias">também ${esc(c.a.join(", "))}</span>`:""}</span>
+    <p class="desc">${esc(c.d)}</p>${c.note?`<span class="note">${esc(c.note)}</span>`:""}
+    <span class="chips">${c.mod?'<span class="chip mod">Só mods</span>':""}${(c.p.length===4?[{k:"all"}]:c.p.map(k=>({k}))).map(o=>o.k==="all"?'<span class="chip" style="--c:var(--or)">Todas as plataformas</span>':`<span class="chip" style="--c:var(--${o.k})">${NAMES[o.k]}</span>`).join("")}</span>
+   </button>`).join("")}</div></section>`;
+ }).join("");
+ empty.style.display=total?"none":"block";
+}
+function setPlat(p,push){
+ plat=p;
+ document.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-pressed",b.dataset.p===p));
+ const h={tw:"twitch",yt:"youtube",kk:"kick",tt:"tiktok"}[p];
+ if(push){try{history.replaceState(null,"",h?"#"+h:location.pathname)}catch(e){}}
+ render();
+}
+function fromHash(){const m={twitch:"tw",youtube:"yt",kick:"kk",tiktok:"tt"}[location.hash.slice(1).toLowerCase()];setPlat(m||"all",false)}
+document.querySelector(".tabs").addEventListener("click",e=>{const b=e.target.closest(".tab");if(b)setPlat(b.dataset.p,true)});
+q.addEventListener("input",render);
+list.addEventListener("click",async e=>{
+ const b=e.target.closest(".cmd");if(!b)return;
+ try{await navigator.clipboard.writeText(b.dataset.copy);b.classList.add("ok");setTimeout(()=>b.classList.remove("ok"),1200)}catch(err){}
+});
+window.addEventListener("hashchange",fromHash);
+fromHash();
+}
+</script>
+</body>
+</html>
